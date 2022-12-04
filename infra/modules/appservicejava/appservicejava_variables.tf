@@ -50,24 +50,22 @@ variable "java_version" {
   default     = "17-java17"
 }
 
-variable "database_fqdn" {
-  description = "postgresql server database fqdn."
+variable "pg_custom_role_name_with_aad_identity" {
   type        = string
-  default     = "17-java17"
+  description = "Custom PostgreSQL role with Azure AD object identifier"
 }
 
-variable "database_name" {
-  description = "postgresql server database name."
+variable "pg_aad_admin_user" {
   type        = string
+  description = "PostgreSQL Azure AD administrator"
 }
 
-variable "database_username" {
-  description = "postgresql server database username."
+variable "pg_database_name" {
   type        = string
+  description = "Database name of PostgreSQL"
 }
 
-variable "database_server_name" {
-  description = "postgresql server database server name."
+variable "pg_server_fqdn" {
   type        = string
-  default     = ""
+  description = "PostgreSQL FQDN"
 }

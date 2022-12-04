@@ -12,9 +12,8 @@
 
 The following environment variables are available for configuration:
 
-- `AZURE_KEY_VAULT_ENDPOINT`. If set, other secret environment properties such as `AZURE_COSMOS_CONNECTION_STRING` are loaded from KeyVault.
-- `AZURE_COSMOS_CONNECTION_STRING`. A direct override for specifying the Cosmos DB connection string (Mongo DB also supported).
-- `APPLICATIONINSIGHTS_CONNECTION_STRING`. (Optional) Connection string of an Application Insights instance for telemetry to be logged.
+- `AZURE_POSTGRESQL_URL`. A FQDN for PostgreSQL Flexible Server.
+- `AZURE_POSTGRESQL_USERNAME`. A Database username in PostgreSQL Flexible Server.
 
 ### Build & Compile
 
@@ -31,7 +30,7 @@ The REST API will be available at `http://localhost:3100`.
 
 ```bash
 docker build . -t java-todo@latest
-docker run -e AZURE_COSMOS_CONNECTION_STRING=$AZURE_COSMOS_CONNECTION_STRING -p 3100:3100 -t java-todo@latest
+docker run -e AZURE_POSTGRESQL_URL=$AZURE_POSTGRESQL_URL -e AZURE_POSTGRESQL_USERNAME=$AZURE_POSTGRESQL_USERNAME -p 3100:3100 -t java-todo@latest
 ```
 
 ### Regenerate API from OpenAPI spec

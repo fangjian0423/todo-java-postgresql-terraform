@@ -67,8 +67,7 @@ resource "azurecaf_name" "app_umi" {
   name                = "pqsl-script"
 
   provisioner "local-exec" {
-#    command     = "./scripts/psql-create-db-aad-user-flexible-server.sh ${var.database_fqdn} ${azurerm_linux_web_app.web.identity.0.principal_id} ${var.database_name} ${var.database_username}"
-    command     = "./scripts/psql-create-db-aad-user-single-server.sh ${var.database_fqdn} ${azurerm_linux_web_app.web.identity.0.principal_id} ${var.database_name} ${var.database_username} ${var.database_server_name}"
+    command     = "./scripts/pg-create-aad-role.sh ${var.pg_server_fqdn} ${azurerm_linux_web_app.web.identity.0.principal_id} ${var.pg_database_name} ${var.pg_aad_admin_user} ${var.pg_custom_role_name_with_aad_identity}"
     working_dir = path.module
     when        = create
   }

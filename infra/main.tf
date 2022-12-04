@@ -2,7 +2,7 @@ locals {
   tags                         = { azd-env-name : var.environment_name }
   sha                          = base64encode(sha256("${var.environment_name}${var.location}${data.azurerm_client_config.current.subscription_id}"))
   resource_token               = substr(replace(lower(local.sha), "[^A-Za-z0-9_]", ""), 0, 13)
-#  psql_connection_string_key = "AZURE-PSQL-CONNECTION-STRING"
+  psql_custom_username         = "CUSTOM_ROLE"
 }
 # ------------------------------------------------------------------------------------------------------
 # Deploy resource Group
@@ -70,7 +70,7 @@ module "loganalytics" {
 # ------------------------------------------------------------------------------------------------------
 #module "cosmos" {
 module "postgresql" {
-#  source         = "./modules/cosmos"
+  #  source         = "./modules/cosmos"
   source         = "./modules/postgresql"
   location       = var.location
   rg_name        = azurerm_resource_group.rg.name
@@ -121,16 +121,18 @@ module "api" {
   tags               = merge(local.tags, { "azd-service-name" : "api" })
   service_name       = "api"
   appservice_plan_id = module.appserviceplan.APPSERVICE_PLAN_ID
-  database_name = module.postgresql.AZURE_POSTGRESQL_DATABASE_NAME
-  database_fqdn = module.postgresql.AZURE_POSTGRESQL_FQDN
-  database_username = module.postgresql.AZURE_POSTGRESQL_USERNAME
-  database_server_name = module.postgresql.AZURE_POSTGRESQL_SERVER_NAME
+
+  pg_custom_role_name_with_aad_identity = local.psql_custom_username
+  pg_aad_admin_user = module.postgresql.AZURE_POSTGRESQL_ADMIN_USERNAME
+  pg_database_name = module.postgresql.AZURE_POSTGRESQL_DATABASE_NAME
+  pg_server_fqdn = module.postgresql.AZURE_POSTGRESQL_FQDN
+
   app_settings = {
     "SCM_DO_BUILD_DURING_DEPLOYMENT"        = "true"
     "APPLICATIONINSIGHTS_CONNECTION_STRING" = module.applicationinsights.APPLICATIONINSIGHTS_CONNECTION_STRING
     "AZURE_POSTGRESQL_URL"                  = "jdbc:postgresql://${module.postgresql.AZURE_POSTGRESQL_FQDN}:5432/${module.postgresql.AZURE_POSTGRESQL_DATABASE_NAME}?sslmode=require"
-    "AZURE_POSTGRESQL_USERNAME"             = "AADUSER@${module.postgresql.AZURE_POSTGRESQL_SERVER_NAME}"
-#    "AZURE_PSQL_USERNAME"                   = "AADUSER"
+    "AZURE_POSTGRESQL_USERNAME"             = local.psql_custom_username
+    "JAVA_OPTS"                             = "-Djdk.attach.allowAttachSelf=true"
   }
 
   app_command_line = ""

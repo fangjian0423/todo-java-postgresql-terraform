@@ -11,11 +11,11 @@ terraform {
   }
 }
 # ------------------------------------------------------------------------------------------------------
-# Deploy cosmos db account
+# Deploy PostgreSQL Server
 # ------------------------------------------------------------------------------------------------------
-resource "azurecaf_name" "db_acc_name" {
+resource "azurecaf_name" "psql" {
   name          = var.resource_token
-  resource_type = "azurerm_cosmosdb_account"
+  resource_type = "azurerm_postgresql_flexible_server"
   random_length = 0
   clean_input   = true
 }
@@ -26,49 +26,60 @@ data "azuread_user" "current_user" {
   object_id = data.azurerm_client_config.current.object_id
 }
 
-resource "azurerm_postgresql_server" "psqlServer" {
-  name                            = azurecaf_name.db_acc_name.result
+resource "random_password" "password" {
+  length           = 32
+  special          = true
+  override_special = "_%@"
+}
+
+resource "azurerm_postgresql_flexible_server" "psqlServer" {
+  name                            = azurecaf_name.psql.result
   location                        = var.location
   resource_group_name             = var.rg_name
+  tags                            = var.tags
+  version                         = "12"
+  administrator_login             = var.administrator_login
+  administrator_password          = random_password.password.result
+  zone                            = "1"
 
-  administrator_login          = "psqladmin"
-  administrator_login_password = "H@Sh1CoR3!"
+  storage_mb                      = 32768
 
-  sku_name   = "GP_Gen5_4"
-  version    = "11"
-  storage_mb = 640000
+  sku_name                        = "GP_Standard_D4s_v3"
 
-  backup_retention_days        = 7
-  geo_redundant_backup_enabled = true
-  auto_grow_enabled            = true
-
-  public_network_access_enabled    = true
-  ssl_enforcement_enabled          = true
-  ssl_minimal_tls_version_enforced = "TLS1_2"
-
+  authentication {
+    active_directory_auth_enabled = true
+    password_auth_enabled         = true
+    tenant_id                     = data.azurerm_client_config.current.tenant_id
+  }
 }
 
 
-resource "azurerm_postgresql_firewall_rule" "firewall_rule" {
+resource "azurerm_postgresql_flexible_server_firewall_rule" "firewall_rule" {
   name                            = "AllowAllFireWallRule"
-  resource_group_name = var.rg_name
-  server_name         = azurerm_postgresql_server.psqlServer.name
+  server_id                       = azurerm_postgresql_flexible_server.psqlServer.id
   start_ip_address                = "0.0.0.0"
   end_ip_address                  = "255.255.255.255"
 }
 
-resource "azurerm_postgresql_database" "database" {
-  name      = "todo"
-  resource_group_name = var.rg_name
-  server_name         = azurerm_postgresql_server.psqlServer.name
+resource "azurerm_postgresql_flexible_server_database" "database" {
+  name      = var.database_name
+  server_id = azurerm_postgresql_flexible_server.psqlServer.id
   collation = "en_US.utf8"
   charset   = "utf8"
 }
 
-resource "azurerm_postgresql_active_directory_administrator" "psql_aad_admin" {
-  server_name         = azurerm_postgresql_server.psqlServer.name
+resource "azurerm_postgresql_flexible_server_configuration" "configurations" {
+  name      = "azure.extensions"
+  server_id = azurerm_postgresql_flexible_server.psqlServer.id
+  value     = "UUID-OSSP"
+}
+
+resource "azurerm_postgresql_flexible_server_active_directory_administrator" "aad_admin" {
+  server_name         = azurerm_postgresql_flexible_server.psqlServer.name
   resource_group_name = var.rg_name
-  login               = data.azuread_user.current_user.user_principal_name
   tenant_id           = data.azurerm_client_config.current.tenant_id
   object_id           = data.azurerm_client_config.current.object_id
+  principal_name      = data.azuread_user.current_user.user_principal_name
+  principal_type      = "User"
 }
+

@@ -17,3 +17,15 @@ variable "resource_token" {
   description = "A suffix string to centrally mitigate resource name collisions."
   type        = string
 }
+
+variable "administrator_login" {
+  type        = string
+  description = "The PostgreSQL administrator login"
+  default     = "psqladmin"
+}
+
+variable "database_name" {
+  type        = string
+  description = "The database name of PostgreSQL"
+  default     = "todo"
+}
