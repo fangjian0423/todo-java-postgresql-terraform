@@ -1,5 +1,5 @@
 locals {
-  tags                         = { azd-env-name : var.environment_name }
+  tags                         = { azd-env-name : var.environment_name, spring-cloud-azure : true }
   sha                          = base64encode(sha256("${var.environment_name}${var.location}${data.azurerm_client_config.current.subscription_id}"))
   resource_token               = substr(replace(lower(local.sha), "[^A-Za-z0-9_]", ""), 0, 13)
   psql_custom_username         = "CUSTOM_ROLE"
@@ -46,31 +46,9 @@ module "loganalytics" {
 }
 
 # ------------------------------------------------------------------------------------------------------
-# Deploy key vault
+# Deploy PostgreSQL
 # ------------------------------------------------------------------------------------------------------
-#module "keyvault" {
-#  source                   = "./modules/keyvault"
-#  location                 = var.location
-#  principal_id             = var.principal_id
-#  rg_name                  = azurerm_resource_group.rg.name
-#  tags                     = azurerm_resource_group.rg.tags
-#  resource_token           = local.resource_token
-#  access_policy_object_ids = [module.api.IDENTITY_PRINCIPAL_ID]
-#  secrets = [
-#    {
-#      name  = local.cosmos_connection_string_key
-##      value = module.cosmos.AZURE_COSMOS_CONNECTION_STRING
-#      value = "test"
-#    }
-#  ]
-#}
-
-# ------------------------------------------------------------------------------------------------------
-# Deploy cosmos
-# ------------------------------------------------------------------------------------------------------
-#module "cosmos" {
 module "postgresql" {
-  #  source         = "./modules/cosmos"
   source         = "./modules/postgresql"
   location       = var.location
   rg_name        = azurerm_resource_group.rg.name
