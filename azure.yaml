@@ -2,7 +2,7 @@
 
 name: todo-java-mongo
 metadata:
-  template: todo-java-mongo@0.0.1-beta
+  template: todo-java-postgresql-terraform@0.0.1-beta
 services:
   web:
     project: ./src/web
