@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
 
-name: todo-java-mongo
+name: todo-java-postgresql-terraform
 metadata:
   template: todo-java-postgresql-terraform@0.0.1-beta
 services:
