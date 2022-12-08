@@ -26,7 +26,7 @@ The fastest way for you to get this application up and running on Azure is to us
 1. Run the following command to initialize the project, provision Azure resources, and deploy the application code.
 
 ```bash
-azd up
+azd up --template https://github.com/fangjian0423/todo-java-postgresql-terraform
 ```
 
 You will be prompted for the following information:
