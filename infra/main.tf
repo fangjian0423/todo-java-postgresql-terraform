@@ -29,7 +29,7 @@ module "applicationinsights" {
   location         = var.location
   rg_name          = azurerm_resource_group.rg.name
   environment_name = var.environment_name
-  workspace_id     = module.loganalytics.LOGANALYTICS_WORKSPACE_ID
+  workspace_id     = "mockid"
   tags             = azurerm_resource_group.rg.tags
   resource_token   = local.resource_token
 }
@@ -37,13 +37,13 @@ module "applicationinsights" {
 # ------------------------------------------------------------------------------------------------------
 # Deploy log analytics
 # ------------------------------------------------------------------------------------------------------
-module "loganalytics" {
-  source         = "./modules/loganalytics"
-  location       = var.location
-  rg_name        = azurerm_resource_group.rg.name
-  tags           = azurerm_resource_group.rg.tags
-  resource_token = local.resource_token
-}
+#module "loganalytics" {
+#  source         = "./modules/loganalytics"
+#  location       = var.location
+#  rg_name        = azurerm_resource_group.rg.name
+#  tags           = azurerm_resource_group.rg.tags
+#  resource_token = local.resource_token
+#}
 
 # ------------------------------------------------------------------------------------------------------
 # Deploy PostgreSQL
