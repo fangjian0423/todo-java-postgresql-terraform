@@ -66,10 +66,10 @@ locals {
   test = pathexpand("~/${path.module}/main.tf")
   command_map = substr(local.test,0,1) == "/"? {
     command = "./scripts/pg-create-aad-role.sh ${var.pg_server_fqdn} ${azurerm_linux_web_app.web.identity.0.principal_id} ${var.pg_database_name} ${var.pg_aad_admin_user} ${var.pg_custom_role_name_with_aad_identity}",
-    interpreter = "bash"
+    interpreter = []
   }:{
     command = "./scripts/pg-create-aad-role.ps1 ${var.pg_server_fqdn} ${azurerm_linux_web_app.web.identity.0.principal_id} ${var.pg_database_name} ${var.pg_aad_admin_user} ${var.pg_custom_role_name_with_aad_identity}",
-    interpreter = "powershell"
+    interpreter = ["powershell"]
   }
 }
 
@@ -79,7 +79,7 @@ resource "azurecaf_name" "app_umi" {
 
   provisioner "local-exec" {
     command = local.command_map.command
-    interpreter = [local.command_map.interpreter]
+    interpreter = local.command_map.interpreter
     working_dir = path.module
     when = create
   }
