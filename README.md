@@ -17,7 +17,8 @@ The following prerequisites are required to use this application. Please ensure 
 - [Azure Developer CLI](https://aka.ms/azd-install)
 - [Java 17 or later](https://jdk.java.net/) - for API backend
 - [Node.js with npm (16.13.1+)](https://nodejs.org/) - for Web frontend
-- [PostgreSQL 12 or later](https://www.postgresql.org/) - for PostgreSQL CLI operations
+- [Terraform](https://www.terraform.io/)
+- [PostgreSQL 12 or later](https://www.postgresql.org/) - for PostgreSQL initialization
 
 ### Quickstart
 
