@@ -26,7 +26,10 @@ jobs:
         shell: pwsh
         env:
           AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
-
+      - name: Install PostgreSQL Command Line Tools
+        run: |
+          apt-get update
+          apt-get install --yes --no-install-recommends postgresql-client
       - name: Azure Dev Provision
         run: azd provision --no-prompt
         env:
