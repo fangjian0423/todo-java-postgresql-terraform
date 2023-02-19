@@ -54,6 +54,7 @@ module "postgresql" {
   rg_name        = azurerm_resource_group.rg.name
   tags           = azurerm_resource_group.rg.tags
   resource_token = local.resource_token
+  client_id      = var.client_id
 }
 
 # ------------------------------------------------------------------------------------------------------

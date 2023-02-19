@@ -22,8 +22,8 @@ resource "azurecaf_name" "psql" {
 
 data "azurerm_client_config" "current" {}
 
-data "azuread_user" "current_user" {
-  object_id = data.azurerm_client_config.current.object_id
+locals {
+  principal_type = "${var.client_id == "" ? "User" : "ServicePrincipal"}"
 }
 
 resource "random_password" "password" {
@@ -79,7 +79,6 @@ resource "azurerm_postgresql_flexible_server_active_directory_administrator" "aa
   resource_group_name = var.rg_name
   tenant_id           = data.azurerm_client_config.current.tenant_id
   object_id           = data.azurerm_client_config.current.object_id
-  principal_name      = data.azuread_user.current_user.user_principal_name
-  principal_type      = "User"
+  principal_name      = data.azurerm_client_config.current.object_id
+  principal_type      = local.principal_type
 }
-

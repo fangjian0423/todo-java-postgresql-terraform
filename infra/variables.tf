@@ -13,3 +13,9 @@ variable "principal_id" {
   type        = string
   default     = ""
 }
+
+variable "client_id" {
+  description = "Client id of current account"
+  type        = string
+  default     = ""
+}

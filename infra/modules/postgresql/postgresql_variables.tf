@@ -29,3 +29,9 @@ variable "database_name" {
   description = "The database name of PostgreSQL"
   default     = "todo"
 }
+
+variable "client_id" {
+  type        = string
+  description = "The database name of PostgreSQL"
+  default     = ""
+}
