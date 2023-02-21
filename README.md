@@ -116,6 +116,8 @@ Before you call the `azd pipeline config` command, you'll need to install the fo
 
 - [GitHub CLI (2.3+)](https://github.com/cli/cli)
 
+Also, you need to run `azd down` command before call the `azd pipeline config` command. 
+
 Run the following command to set up a GitHub Action:
 
 ```bash
