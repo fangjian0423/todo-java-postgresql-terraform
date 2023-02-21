@@ -108,6 +108,8 @@ At this point, you have a complete application deployed on Azure. But there is m
 
 #### Set up a pipeline using `azd pipeline`
 
+Please follow [https://aka.ms/azure-dev/terraform](https://aka.ms/azure-dev/terraform) to enable remote state before this section.
+
 This template includes a GitHub Actions pipeline configuration file that will deploy your application whenever code is pushed to the main branch. You can find that pipeline file here: `.github/workflows`.
 
 Setting up this pipeline requires you to give GitHub permission to deploy to Azure on your behalf, which is done via a Service Principal stored in a GitHub secret named `AZURE_CREDENTIALS`. The `azd pipeline config` command will automatically create a service principal for you. The command also helps to create a private GitHub repository and pushes code to the newly created repo.
