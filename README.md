@@ -174,6 +174,13 @@ The Azure Developer CLI includes many other commands to help with your Azure dev
 
 Sometimes, things go awry. If you happen to run into issues, then please review our ["Known Issues"](https://aka.ms/azure-dev/knownissues) page for help. If you continue to have issues, then please file an issue in our main [Azure Dev](https://aka.ms/azure-dev/issues) repository.
 
+### Error: creating Administrator
+
+Please retry to resolve when you meet the below error:
+
+![image](https://user-images.githubusercontent.com/5254035/221769269-15914ac2-7260-4a29-b603-10baae2639cd.png)
+
+
 ## Security
 
 ### Roles
