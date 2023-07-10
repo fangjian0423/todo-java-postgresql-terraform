@@ -20,34 +20,24 @@ The following prerequisites are required to use this application. Please ensure 
 - [Terraform](https://www.terraform.io/)
 - [PostgreSQL 12 or later](https://www.postgresql.org/) - for PostgreSQL initialization (make sure `psql` command is available in your terminal)
 
+> Note: Terraform is in **alpha mode**. You need to enable it by running `azd config set alpha.terraform on`. Read more about [alpha features](https://github.com/Azure/azure-dev/tree/main/cli/azd/docs).
+
 ### Quickstart
 
-The fastest way for you to get this application up and running on Azure is to use the `azd up` command. This single command will create and configure all necessary Azure resources - including access policies and roles for your account and service-to-service communication with Managed Identities.
+To learn how to get started with any template, follow the steps in [this quickstart](https://learn.microsoft.com/azure/developer/azure-developer-cli/get-started?tabs=localinstall&pivots=programming-language-java) with this template (`fangjian0423/todo-java-postgresql-terraform`).
 
-1. Open a terminal, create a new empty folder, and change into it.
-1. Run the following command to initialize the project, provision Azure resources, and deploy the application code.
+This quickstart will show you how to authenticate on Azure, initialize using a template, provision infrastructure and deploy code on Azure via the following commands:
 
 ```bash
-azd up --template https://github.com/fangjian0423/todo-java-postgresql-terraform
+# Log in to azd. Only required once per-install.
+azd auth login
+
+# First-time project setup. Initialize a project in the current directory, using this template. 
+azd init --template fangjian0423/todo-java-postgresql-terraform
+
+# Provision and deploy to Azure
+azd up
 ```
-
-You will be prompted for the following information:
-
-- `Environment Name`: This will be used as a prefix for the resource group that will be created to hold all Azure resources. This name should be unique within your Azure subscription.
-- `Azure Location`: The Azure location where your resources will be deployed.
-- `Azure Subscription`: The Azure Subscription where your resources will be deployed.
-
-> NOTE: This may take a while to complete as it executes three commands: `azd init` (initializes environment), `azd provision` (provisions Azure resources), and `azd deploy` (deploys application code). You will see a progress indicator as it provisions and deploys your application.
-
-When `azd up` is complete it will output the following URLs:
-
-- Azure Portal link to view resources
-- ToDo Web application frontend
-- ToDo API application
-
-!["azd up output"](assets/urls.png)
-
-Click the web application URL to launch the ToDo app. Create a new collection and add some items. This will create monitoring activity in the application that you will be able to see later when you run `azd monitor`.
 
 > NOTE:
 >
@@ -106,65 +96,13 @@ Once the extension is installed, you can press `F1`, and type "Azure Developer C
 
 At this point, you have a complete application deployed on Azure. But there is much more that the Azure Developer CLI can do. These next steps will introduce you to additional commands that will make creating applications on Azure much easier. Using the Azure Developer CLI, you can setup your pipelines, monitor your application, test and debug locally.
 
-#### Set up a pipeline using `azd pipeline`
+- [`azd pipeline config`](https://learn.microsoft.com/azure/developer/azure-developer-cli/configure-devops-pipeline?tabs=GitHub) - to configure a CI/CD pipeline (using GitHub Actions or Azure DevOps) to deploy your application whenever code is pushed to the main branch. 
 
-Please follow [https://aka.ms/azure-dev/terraform](https://aka.ms/azure-dev/terraform) to enable remote state before this section.
+- [`azd monitor`](https://learn.microsoft.com/azure/developer/azure-developer-cli/monitor-your-app) - to monitor the application and quickly navigate to the various Application Insights dashboards (e.g. overview, live metrics, logs)
 
-This template includes a GitHub Actions pipeline configuration file that will deploy your application whenever code is pushed to the main branch. You can find that pipeline file here: `.github/workflows`.
+- [Run and Debug Locally](https://learn.microsoft.com/azure/developer/azure-developer-cli/debug?pivots=ide-vs-code) - using Visual Studio Code and the Azure Developer CLI extension
 
-Setting up this pipeline requires you to give GitHub permission to deploy to Azure on your behalf, which is done via a Service Principal stored in a GitHub secret named `AZURE_CREDENTIALS`. The `azd pipeline config` command will automatically create a service principal for you. The command also helps to create a private GitHub repository and pushes code to the newly created repo.
-
-Before you call the `azd pipeline config` command, you'll need to install the following:
-
-- [GitHub CLI (2.3+)](https://github.com/cli/cli)
-
-Also, you need to run `azd down` command before call the `azd pipeline config` command. 
-
-Run the following command to set up a GitHub Action:
-
-```bash
-azd pipeline config
-```
-
-> Support for Azure DevOps Pipelines is coming soon to `azd pipeline config`. In the meantime, you can follow the instructions found here: [.azdo/pipelines/README.md](./.azdo/pipelines/README.md) to set it up manually.
-
-#### Monitor the application using `azd monitor`
-
-To help with monitoring applications, the Azure Dev CLI provides a `monitor` command to help you get to the various Application Insights dashboards.
-
-- Run the following command to open the "Overview" dashboard:
-
-  ```bash
-  azd monitor --overview
-  ```
-
-- Live Metrics Dashboard
-
-  Run the following command to open the "Live Metrics" dashboard:
-
-  ```bash
-  azd monitor --live
-  ```
-
-- Logs Dashboard
-
-  Run the following command to open the "Logs" dashboard:
-
-  ```bash
-  azd monitor --logs
-  ```
-
-#### Run and Debug Locally
-
-The easiest way to run and debug is to leverage the Azure Developer CLI Visual Studio Code Extension. Refer to this [walk-through](https://aka.ms/azure-dev/vscode) for more details.
-
-#### Clean up resources
-
-When you are done, you can delete all the Azure resources created with this template by running the following command:
-
-```bash
-azd down
-```
+- [`azd down`](https://learn.microsoft.com/azure/developer/azure-developer-cli/reference#azd-down) - to delete all the Azure resources created with this template 
 
 ### Additional azd commands
 
